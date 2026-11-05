@@ -3,7 +3,7 @@
   "displayName": "MD Reader +RTL",
   "description": "Read Markdown as a clean page inside the editor, with automatic RTL for Persian and Arabic. By HiT Land.",
   "version": "0.1.0",
-  "publisher": "hitland",
+  "publisher": "HiTLandCo",
   "license": "MIT",
   "icon": "media/icon.png",
   "homepage": "https://github.com/HiTLandco/hit-mdviewer#readme",

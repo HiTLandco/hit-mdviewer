@@ -42,7 +42,7 @@ async function run() {
     fs.writeFileSync(path.join(dir, 'other.md'), '# Other\n');
     const uri = vscode.Uri.file(file);
 
-    const extension = vscode.extensions.getExtension('hitland.md-reader-rtl');
+    const extension = vscode.extensions.getExtension('HiTLandCo.md-reader-rtl');
     record('extensionFound', !!extension);
     const api = await extension.activate();
 
