@@ -1,0 +1,110 @@
+{
+  "name": "md-reader-rtl",
+  "displayName": "MD Reader +RTL",
+  "description": "Read Markdown as a clean page inside the editor, with automatic RTL for Persian and Arabic. By HiT Land.",
+  "version": "0.1.0",
+  "publisher": "hitland",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "homepage": "https://github.com/HiTLandco/hit-mdviewer#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HiTLandco/hit-mdviewer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HiTLandco/hit-mdviewer/issues"
+  },
+  "galleryBanner": {
+    "color": "#080808",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "markdown",
+    "rtl",
+    "persian",
+    "farsi",
+    "viewer"
+  ],
+  "extensionKind": [
+    "ui",
+    "workspace"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished",
+    "onLanguage:markdown"
+  ],
+  "contributes": {
+    "configuration": {
+      "title": "MD Reader +RTL",
+      "properties": {
+        "hitMdViewer.openByDefault": {
+          "type": "boolean",
+          "default": true,
+          "description": "Open Markdown files in MD Reader +RTL instead of the text editor. Diff views are never changed."
+        }
+      }
+    },
+    "customEditors": [
+      {
+        "viewType": "hitland.mdViewer",
+        "displayName": "MD Reader +RTL",
+        "selector": [
+          {
+            "filenamePattern": "*.md"
+          },
+          {
+            "filenamePattern": "*.markdown"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
+    "commands": [
+      {
+        "command": "hitMdViewer.editSource",
+        "title": "MD Reader +RTL: Edit Source",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "hitMdViewer.openViewer",
+        "title": "MD Reader +RTL: Open in Viewer",
+        "icon": "$(book)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "hitMdViewer.editSource",
+          "when": "activeCustomEditorId == hitland.mdViewer",
+          "group": "navigation"
+        },
+        {
+          "command": "hitMdViewer.openViewer",
+          "when": "resourceLangId == markdown && !isInDiffEditor && activeCustomEditorId != hitland.mdViewer",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test:render": "node test/render.test.js",
+    "package": "npm run build && vsce package --no-dependencies --allow-missing-repository --out release/md-reader-rtl.vsix"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.0",
+    "markdown-it-task-lists": "^2.1.1"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.2.0",
+    "esbuild": "^0.25.0",
+    "vazirmatn": "^33.0.3"
+  }
+}

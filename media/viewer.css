@@ -1,0 +1,354 @@
+/* MD Reader +RTL. Colours come from the editor theme; the fallbacks are for the print page, which has no theme. */
+@font-face {
+  font-family: 'Vazirmatn';
+  src: url(fonts/Vazirmatn-Variable.woff2) format('woff2');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+body {
+  --bg: var(--vscode-editor-background, #ffffff);
+  --text: var(--vscode-editor-foreground, #080808);
+  --muted: var(--vscode-descriptionForeground, #262630);
+  --surface: var(--vscode-textCodeBlock-background, rgba(38, 38, 48, 0.06));
+  --line: var(--vscode-panel-border, rgba(38, 38, 48, 0.16));
+  --accent: var(--vscode-textLink-foreground, #dc2626);
+  --button-bg: var(--vscode-button-background, #dc2626);
+  --button-fg: var(--vscode-button-foreground, #f5f5f7);
+  --hover: var(--vscode-toolbar-hoverBackground, rgba(38, 38, 48, 0.08));
+  --focus: var(--vscode-focusBorder, #dc2626);
+  --selection: var(--vscode-editor-selectionBackground, rgba(220, 38, 38, 0.25));
+  --scroll: var(--vscode-scrollbarSlider-background, rgba(38, 38, 48, 0.3));
+  --scroll-hover: var(--vscode-scrollbarSlider-hoverBackground, rgba(38, 38, 48, 0.5));
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Vazirmatn', var(--vscode-font-family, Tahoma), sans-serif;
+  font-size: var(--fs, 17px);
+  line-height: 1.95;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Toolbar */
+#toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--vscode-font-family, sans-serif);
+  font-size: var(--vscode-font-size, 13px);
+  line-height: 1.4;
+}
+
+#toolbar .group {
+  display: flex;
+  align-items: center;
+}
+
+#toolbar .spacer {
+  flex: 1;
+}
+
+#toolbar button {
+  margin: 0;
+  margin-inline-start: -1px;
+  padding: 4px 10px;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+#toolbar button:hover {
+  background: var(--hover);
+}
+
+#toolbar button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+  position: relative;
+}
+
+#toolbar button.active {
+  background: var(--button-bg);
+  border-color: var(--vscode-contrastActiveBorder, var(--button-bg));
+  color: var(--button-fg);
+}
+
+#fontValue {
+  min-width: 2.4em;
+  text-align: center;
+}
+
+/* Page */
+#content {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 40px 48px 96px;
+  overflow-wrap: anywhere;
+}
+
+#content > :first-child {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 1.7em 0 0.65em;
+  color: var(--text);
+  font-weight: 800;
+  line-height: 1.35;
+  scroll-margin-top: 64px;
+}
+
+h1 {
+  font-size: 2.1em;
+  padding-bottom: 0.3em;
+  border-bottom: 3px solid var(--accent);
+}
+
+h2 {
+  font-size: 1.6em;
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid var(--line);
+}
+
+h3 {
+  font-size: 1.3em;
+}
+
+h4 {
+  font-size: 1.1em;
+}
+
+h5,
+h6 {
+  font-size: 1em;
+  color: var(--muted);
+}
+
+p {
+  margin: 0.85em 0;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+
+strong {
+  font-weight: 800;
+}
+
+/* No italics: they break Persian letterforms and are off-brand. */
+em {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+code {
+  padding: 0.12em 0.4em;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--vscode-editor-font-family, Consolas), 'Courier New', monospace;
+  font-size: 0.86em;
+  direction: ltr;
+  unicode-bidi: embed;
+}
+
+pre {
+  margin: 1.3em 0;
+  padding: 1.1em 1.3em;
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  direction: ltr;
+  text-align: left;
+}
+
+pre code {
+  padding: 0;
+  background: none;
+  font-size: 0.9em;
+  line-height: 1.65;
+}
+
+blockquote {
+  margin: 1.1em 0;
+  padding: 0.7em 1.2em;
+  background: var(--surface);
+  border-inline-start: 4px solid var(--accent);
+  color: var(--muted);
+}
+
+blockquote > :first-child {
+  margin-top: 0;
+}
+
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+table {
+  display: block;
+  width: 100%;
+  margin: 1.3em 0;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+
+th,
+td {
+  padding: 8px 14px;
+  text-align: start;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+
+th {
+  background: var(--surface);
+  font-weight: 800;
+  border-bottom: 2px solid var(--accent);
+}
+
+ul,
+ol {
+  margin: 0.85em 0;
+  padding-inline-start: 1.9em;
+}
+
+li {
+  margin: 0.35em 0;
+}
+
+li::marker {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.task-list-item {
+  list-style: none;
+  margin-inline-start: -1.4em;
+}
+
+.task-list-item-checkbox {
+  margin-inline-end: 0.5em;
+  accent-color: var(--accent);
+}
+
+hr {
+  margin: 2.2em 0;
+  border: none;
+  border-top: 1px solid var(--line);
+}
+
+img {
+  max-width: 100%;
+  margin: 1em 0;
+}
+
+.frontmatter {
+  margin-bottom: 1.5em;
+  color: var(--muted);
+  font-size: 0.85em;
+}
+
+.frontmatter summary {
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scroll);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-hover);
+}
+
+::selection {
+  background: var(--selection);
+}
+
+@media (max-width: 600px) {
+  #content {
+    padding: 24px 16px 64px;
+  }
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 2cm 2.2cm;
+  }
+
+  body {
+    --fs: 12pt;
+    background: #fff;
+    color: #080808;
+    line-height: 1.7;
+  }
+
+  #toolbar {
+    display: none;
+  }
+
+  #content {
+    max-width: none;
+    padding: 0;
+  }
+
+  pre,
+  blockquote,
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    page-break-after: avoid;
+  }
+}
