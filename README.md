@@ -4,6 +4,8 @@ Read Markdown as a clean page inside the editor, with automatic right-to-left fo
 
 Works in VS Code and in editors built on it, such as Antigravity and Cursor.
 
+**Install:** [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=HiTLandCo.md-reader-rtl), or run `code --install-extension HiTLandCo.md-reader-rtl`.
+
 ![MD Reader +RTL showing a Persian and English document](docs/screenshot.png)
 
 ## What it does
